@@ -28,7 +28,7 @@ def load_calendar(filename):
         # Assume every day begins with the same track
         # TODO: Don't assume this
         while True:
-            this_track = {"date": today, "col_offset": tracks_offset+j, "value":schedule["B3"].offset(row=0,column=tracks_offset+j).value}
+            this_track = {"date": today, "col_offset": tracks_offset+j, "value":str(schedule["B3"].offset(row=0,column=tracks_offset+j).value)}
             if this_track["value"] in [t["value"] for t in todays_tracks]: break
             todays_tracks.append(this_track)
             j+=1;
@@ -45,22 +45,31 @@ def load_calendar(filename):
     shifts = []
     for _,todays_tracks in tracks.items():
         for track in todays_tracks:
-            this_shift_initials = schedule["B3"].offset(row=1,column=track["col_offset"]).value
-            this_shift_begin_i = 1
-            i = 1
-            while i < num_time_slots:
-                cur_initials = schedule["B3"].offset(row=i,column=track["col_offset"]).value
-                if not cur_initials or len(cur_initials) == 0:
-                    i += 1
-                    continue
-                if this_shift_initials and this_shift_initials != cur_initials:
-                    # New shift
+            # Go down the row
+                # When the initials change
+                    # If the last initial was nonempty, create a shift
+            # Then, if the last initial is nonempty, add that one too
+            last_different_initial_idx = 0
+            for r in range(1,num_time_slots):
+                prev_initials = schedule["B4"].offset(row=r-1,column=track["col_offset"]).value
+                curr_initials = schedule["B4"].offset(row=r,column=track["col_offset"]).value
+                if prev_initials != curr_initials:
+                    if prev_initials and len(prev_initials) > 0:
+                        # New shift
+                        shifts.append({
+                            "track": track,
+                            "begin": schedule["A4"].offset(row=last_different_initial_idx, column=0).value,
+                            "end": schedule["A4"].offset(row=r, column=0).value,
+                            "initials": prev_initials})
+                    last_different_initial_idx = r
+                if r == num_time_slots - 1 and curr_initials and len(curr_initials) > 0:
+                    # Last shift
                     shifts.append({
                         "track": track,
-                        "begin": schedule["A4"].offset(row=this_shift_begin_i - 1, column=0).value,
-                        "end": schedule["A4"].offset(row=i-2, column=0).value,
-                        "initials": this_shift_initials})
-                i += 1
+                        "begin": schedule["A4"].offset(row=last_different_initial_idx, column=0).value,
+                        "end": schedule["A4"].offset(row=r, column=0).value,
+                        "initials": prev_initials})
+                    
     
     return shifts
 
@@ -76,6 +85,11 @@ class DbConn:
 
 def get_db_conn(uri_string):
     uri = urlparse(uri_string, scheme="???")
+    if dry_run:
+        def exec_fn(sql):
+            print(f"Would run: {sql}")
+        return DbConn(exec_fn, None)
+
     if uri.scheme == "postgresql":
         if uri.password and not allow_cli_password:
             raise ValueError("Refusing to read password from command line parameters without --allow-password-uri")
@@ -130,10 +144,12 @@ def process_args(args):
     global allow_cli_password
     global db_config_path
     global db_uri_string
+    global dry_run
 
     allow_cli_password = args.allow_password_uri
     db_config_path = args.db_config
     db_uri_string = args.db_uri
+    dry_run = args.dry_run
 
     if not db_config_path and not db_uri_string:
         raise ValueError("You have to specify at least one of --db-config-path | -c or db_uri")
@@ -151,9 +167,10 @@ def upload_shifts(conn, shifts):
         end_time = shift["end"].strftime("%H%M")
         initials = shift["initials"]
         track = shift["track"]["value"]
+        day = shift["track"]["date"].strftime("%w")
         assert(re.search("^[A-Za-z/\\.]+$",initials)) # Make sure we're not letting SQLi thru
-        assert(re.search("^[A-Za-z]+[0-9]?$",track)) # Make sure we're not letting SQLi thru
-        conn.execute(f"INSERT INTO shifts(week_no,begin_time,end_time,initials,track) VALUES ('{week_no}','{begin_time}','{end_time}','{initials}','{track}')");
+        assert(re.search("^[A-Za-z]+[0-9]?|15$",track)) # Make sure we're not letting SQLi thru
+        conn.execute(f"INSERT INTO shifts(week_no,begin_time,end_time,initials,track,day) VALUES ('{week_no}','{begin_time}','{end_time}','{initials}','{track}',{day})");
 
 
 def main():
@@ -164,6 +181,7 @@ def main():
     parser.add_argument("filename")
     parser.add_argument("db_uri", nargs='?')
     parser.add_argument("--allow-password-uri", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("-d", "--dry-run", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("-c", "--db-config")
 
     args = parser.parse_args()
