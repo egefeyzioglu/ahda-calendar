@@ -86,13 +86,13 @@ def get_db_conn(uri_string):
                 raise ValueError(f"File {db_config_path} has no section postgresql")
             for param in parser.items("postgresql"):
                 db[param[0]] = param[1]
-        if uri.username != None: db["username"] = uri.username
+        if uri.username != None: db["user"] = uri.username
         if uri.password != None: db["password"] = uri.password
         if uri.hostname != None: db["host"] = uri.hostname
         if uri.port != None: db["port"] = uri.port
         if uri.path != "" and uri.path != None: db["dbname"] = uri.path.lstrip("/")
 
-        if not db["port"]: db["port"] = 5432
+        if "port" not in db: db["port"] = 5432
 
         conn = psycopg2.connect(**db)
         def exec_fn(sql):
