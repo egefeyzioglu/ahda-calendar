@@ -6,6 +6,7 @@ import psycopg2
 import datetime
 from urllib.parse import urlparse
 from configparser import ConfigParser
+import re
 
 def load_calendar(filename):
     file = openpyxl.load_workbook(filename)
@@ -70,7 +71,7 @@ class DbConn:
         self.ctx = ctx
 
     def execute(self, sql):
-        return self._exec(sql)
+        return self._execute(sql)
 
 
 def get_db_conn(uri_string):
@@ -120,6 +121,7 @@ def get_db_conn(uri_string):
 
         ret = DbConn(exec_fn, conn)
 
+        return ret
     else:
         raise ValueError(f"Unsupported URI scheme \"{uri.scheme}\"")
 
@@ -137,6 +139,22 @@ def process_args(args):
         raise ValueError("You have to specify at least one of --db-config-path | -c or db_uri")
 
 
+def upload_shifts(conn, shifts):
+    week_no = shifts[0]["track"]["date"].strftime("%Y%U")
+    if conn.execute(f"SELECT * FROM weeks WHERE week_no = '{week_no}'"):
+        print(f"Week {week_no} already uploaded, replacing")
+        conn.execute(f"DELETE FROM shifts WHERE week_no = '{week_no}'")
+        conn.execute(f"DELETE FROM weeks WHERE week_no = '{week_no}'")
+    conn.execute(f"INSERT INTO weeks(week_no) VALUES('{week_no}')")
+    for shift in shifts:
+        begin_time = shift["begin"].strftime("%H%M")
+        end_time = shift["end"].strftime("%H%M")
+        initials = shift["initials"]
+        track = shift["track"]["value"]
+        assert(re.search("^[A-Za-z/\\.]+$",initials)) # Make sure we're not letting SQLi thru
+        assert(re.search("^[A-Za-z]+[0-9]?$",track)) # Make sure we're not letting SQLi thru
+        conn.execute(f"INSERT INTO shifts(week_no,begin_time,end_time,initials,track) VALUES ('{week_no}','{begin_time}','{end_time}','{initials}','{track}')");
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -152,11 +170,9 @@ def main():
 
     process_args(args)
 
-    # shifts = load_calendar(args.filename)
-
+    shifts = load_calendar(args.filename)
     conn = get_db_conn(args.db_uri)
-
-
+    upload_shifts(conn, shifts)
 
 
 if __name__ == "__main__":
