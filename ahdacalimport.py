@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+from dataclasses import dataclass
 import openpyxl
 import psycopg2
 import datetime
@@ -83,8 +84,8 @@ class DbConn:
         return self._execute(sql)
 
 
-def get_db_conn(uri_string):
-    uri = urlparse(uri_string, scheme="???")
+def get_db_conn(uri_string, config_path=None, dry_run = False, allow_cli_password=False):
+    uri = urlparse(uri_string)
     if dry_run:
         def exec_fn(sql):
             print(f"Would run: {sql}")
@@ -94,11 +95,11 @@ def get_db_conn(uri_string):
         if uri.password and not allow_cli_password:
             raise ValueError("Refusing to read password from command line parameters without --allow-password-uri")
         db = {}
-        if db_config_path:
+        if config_path:
             parser = ConfigParser()
-            parser.read(db_config_path)
+            parser.read(config_path)
             if not parser.has_section("postgresql"):
-                raise ValueError(f"File {db_config_path} has no section postgresql")
+                raise ValueError(f"File {config_path} has no section postgresql")
             for param in parser.items("postgresql"):
                 db[param[0]] = param[1]
         if uri.username != None: db["user"] = uri.username
@@ -137,22 +138,31 @@ def get_db_conn(uri_string):
 
         return ret
     else:
-        raise ValueError(f"Unsupported URI scheme \"{uri.scheme}\"")
+        raise ValueError(f"Unsupported URI scheme \"{uri.scheme}\"" if uri.scheme else "No URI scheme provided")
 
+@dataclass
+class CLIArgs:
+    allow_cli_password : bool
+    db_config_path : str
+    db_uri_string : str
+    dry_run : bool
 
 def process_args(args):
-    global allow_cli_password
-    global db_config_path
-    global db_uri_string
-    global dry_run
-
     allow_cli_password = args.allow_password_uri
     db_config_path = args.db_config
     db_uri_string = args.db_uri
     dry_run = args.dry_run
 
-    if not db_config_path and not db_uri_string:
-        raise ValueError("You have to specify at least one of --db-config-path | -c or db_uri")
+    if not dry_run and not db_config_path and not db_uri_string:
+        raise ValueError("You have to specify at least one of --db-config-path | -c or db_uri, unless you have --dry-run set")
+
+    return CLIArgs(
+        allow_cli_password=allow_cli_password,
+        db_config_path=db_config_path,
+        db_uri_string=db_uri_string,
+        dry_run=dry_run,
+    )
+
 
 
 def upload_shifts(conn, shifts):
@@ -186,10 +196,10 @@ def main():
 
     args = parser.parse_args()
 
-    process_args(args)
+    cli = process_args(args)
 
     shifts = load_calendar(args.filename)
-    conn = get_db_conn(args.db_uri)
+    conn = get_db_conn(cli.db_uri_string, config_path=cli.db_config_path, dry_run=cli.dry_run, allow_cli_password=cli.allow_cli_password)
     upload_shifts(conn, shifts)
 
 
