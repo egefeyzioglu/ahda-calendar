@@ -169,7 +169,7 @@ def upload_shifts(conn, shifts):
         track = shift["track"]["value"]
         day = shift["track"]["date"].strftime("%w")
         assert(re.search("^[A-Za-z/\\.]+$",initials)) # Make sure we're not letting SQLi thru
-        assert(re.search("^[A-Za-z]+[0-9]?|15$",track)) # Make sure we're not letting SQLi thru
+        assert(re.search("^([A-Za-z]+[0-9]?|15)$",track)) # Make sure we're not letting SQLi thru
         conn.execute(f"INSERT INTO shifts(week_no,begin_time,end_time,initials,track,day) VALUES ('{week_no}','{begin_time}','{end_time}','{initials}','{track}',{day})");
 
 
