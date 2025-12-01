@@ -5,14 +5,197 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/calendar.css">
     <!-- <script src="/js/calendar.js"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sono:wght@200..800&display=swap" rel="stylesheet">
     <title>Calendar Thing</title>
 </head>
 <body>
-    <div class="calendar-container">
-        <div class="calendar-heading"></div>
-        <div class="calendar-body">
-            <div class="calendar-inner" id="calendar-inner">
-
+    <div class="calendar-outer-wrapper">
+        <div class="calendar-overall-background"></div>
+        <div class="calendar">
+            <div class="calendar-day-header-row">
+                <div class="calendar-header-background">
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                    <div class="calendar-header-background--cols"></div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Sunday</div>
+                    <div class="calendar-day--domt">23</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Monday</div>
+                    <div class="calendar-day--domt">24</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Tuesday</div>
+                    <div class="calendar-day--domt">25</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Wednesday</div>
+                    <div class="calendar-day--domt">26</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Thursday</div>
+                    <div class="calendar-day--domt">27</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Friday</div>
+                    <div class="calendar-day--domt">28</div>
+                </div>
+                <div class="calendar-day">
+                    <div class="calendar-day--dowk">Saturday</div>
+                    <div class="calendar-day--domt">29</div>
+                </div>
+            </div>
+            <div class="calendar-inner-wrapper">
+                <div class="calendar-inner">
+                    <div class="calendar-inner-background">
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                        <div class="calendar-inner-background--cols"></div>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="event" id="event-001">
+                            <h2 class="event--title">Phone 1</h2>
+                            <p class="event--details">10:30AM - 2:00PM</p>
+                        </div>
+                        <div class="event" id="event-002"></div>
+                        <div class="event" id="event-003"></div>
+                        <div class="event" id="event-004"></div>
+                    </div>
+                    <div class="calendar-time-strip">
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">08:30</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">09:00</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">09:30</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">10:00</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">10:30</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">11:00</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">11:30</span>
+                            <span class="calendar-time-strip--label--ampm">AM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">12:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">12:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">01:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">01:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">02:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">02:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">03:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">03:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">04:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">04:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">05:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">05:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">06:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">06:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">07:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">07:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">08:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">08:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">09:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">09:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">10:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">10:30</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                        <div class="calendar-time-strip--label">
+                            <span class="calendar-time-strip--label--time">11:00</span>
+                            <span class="calendar-time-strip--label--ampm">PM</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
