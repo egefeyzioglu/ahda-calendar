@@ -1,0 +1,70 @@
+:root {
+    --bg-dark: #1d1935;
+    --accent: #ff7b00;
+}
+
+div.shift:hover{
+    border: 1pt solid red !important;
+}
+
+body{
+    height: 100vh;
+    width: 100vw;
+}
+
+div.calendar-container {
+    width: 80%;
+    height: 70%;
+    background-color: var(--bg-dark);
+    padding-inline: 0.3rem;
+    display: grid;
+    grid-template-rows: 5% 1fr;
+}
+
+div.calendar-body{
+    overflow-y: scroll;
+}
+
+div.calendar-inner{
+    width: 100%;
+    height: 300%;
+    display: grid;
+    grid-template-columns: 1fr repeat(7,4fr);
+    grid-template-rows: repeat(29, 1fr);
+    column-gap: 0.25rem;
+}
+
+/* div.calendar-time-strip{
+    grid-row-start: 1;
+    grid-row-end: 96;
+    grid-column: 1;
+    display: grid;
+    grid-template-rows: repeat(24, 1fr);
+    flex-direction: column;
+    justify-content: space-between;
+} */
+
+div.calendar-inner div.calendar-time-strip--label:nth-child(even) {
+    background-color: aqua;
+}
+
+div.calendar-inner div.calendar-time-strip--label:nth-child(odd) {
+    background-color: blueviolet;
+}
+
+div.calendar-time-strip--label {
+    width: 100%;
+    /* height: 1rem; */
+    grid-column: span 4;
+
+}
+
+div.calendar-heading {
+    background-color: red !important;
+}
+
+div.shift {
+    background-color: var(--accent);
+    grid-row-start: 6;
+    grid-row-end: 14;
+}

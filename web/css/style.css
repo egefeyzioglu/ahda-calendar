@@ -1,0 +1,16 @@
+div.main-card-wrapper {
+    display: flex;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+}
+
+div.main-card{
+    width: 30%;
+    min-height: 30%;
+    padding-block-end: 1rem;
+}
+
+div.main-card h5.card-title {
+    text-align: center;
+}
