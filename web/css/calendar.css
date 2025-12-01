@@ -5,10 +5,11 @@
     --accent-600: #ff9c3f;
     --light-text: #f0f0f0;
 
-    --dim-time-strip-width: 3rem;
+    --dim-time-strip-width: 4rem;
     --dim-calendar-column-gap: 0.25rem;
 
-    --num-calendar-rows: calc(2 * (23 - 8.5));
+    /* --num-calendar-rows: calc(2 * (23 - 8.5) + 1); */
+    --num-calendar-rows: 30;
 }
 
 div {
@@ -126,12 +127,6 @@ div.calendar-day {
     justify-content: center;
 }
 
-div.calendar-time-strip {
-    grid-column: 1;
-    grid-row-start: 1;
-    grid-row-end: -1;
-}
-
 div.event {
     background-color: var(--accent);
     border-radius: 0.25rem;
@@ -185,13 +180,35 @@ div.calendar-inner-background {
 }
 
 div.calendar-inner-background--cols {
+    /* background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 25px, black 26px, rgba(0,0,0,0) 27px); */
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    gap: 1px;
+    padding-block: 1px;
+}
+
+div.calendar-inner-background--cells {
     background-color: var(--bg-dark-400);
+    flex-grow: 1;
+}
+
+div.calendar-time-strip {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: -1;
+    margin-inline-end: 5px;
+    gap: 1px;
+    display: flex;
+    flex-direction: column;
 }
 
 div.calendar-time-strip--label {
+    flex-basis: 0;
     text-align: center;
     line-height: 0.85;
     padding-block: 0.25rem;
+    background-color: var(--bg-dark-400);
 }
 div.calendar-time-strip--label > span {
     vertical-align: middle;
