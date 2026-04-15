@@ -178,8 +178,8 @@ def upload_shifts(conn, shifts):
         initials = shift["initials"]
         track = shift["track"]["value"]
         day = shift["track"]["date"].strftime("%w")
-        if not re.search("^[A-Za-z/\\.]+$",initials): raise ValueError('Initials must contain no characters other than A-Z,a-z,., and /') # Make sure we're not letting SQLi thru
-        if not re.search("^([A-Za-z]+[0-9]?|15)$",track): raise ValueError('Track must be in the specified format') # Make sure we're not letting SQLi thru
+        if not re.search("^[A-Za-z/\\.]+\\Z",initials): raise ValueError('Initials must contain no characters other than A-Z,a-z,., and /') # Make sure we're not letting SQLi thru
+        if not re.search("^([A-Za-z]+[0-9]?|15)\\Z",track): raise ValueError('Track must be in the specified format') # Make sure we're not letting SQLi thru
         conn.execute(f"INSERT INTO shifts(week_no,begin_time,end_time,initials,track,day) VALUES ('{week_no}','{begin_time}','{end_time}','{initials}','{track}',{day})");
 
 
